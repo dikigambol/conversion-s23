@@ -42,4 +42,21 @@ class S23Controller extends Controller
             return response()->json(['message' => "Gagal membuka file zip untuk diekstrak"]);
         }
     }
+
+    public function extractS23(Request $request)
+    {
+        $s23FilePath = $request->file('file');
+
+        $extractedFolderPath = public_path('s23-extracted');
+
+        $zip = new ZipArchive;
+
+        if ($zip->open($s23FilePath) === TRUE) {
+            $zip->extractTo($extractedFolderPath);
+            $zip->close();
+            return "File berhasil diekstrak";
+        } else {
+            $zip->getStatusString();
+        }
+    }
 }
